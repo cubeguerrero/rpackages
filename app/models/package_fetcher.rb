@@ -13,8 +13,12 @@ class PackageFetcher
       result.packages.map do |p|
         description = fetch_description(p[:package], p[:version])
         data = p.merge(description)
-        package = Package.find_by(name: data[:package])
+        package = find_package_by_name(data[:package])
         package = Package.create(name: data[:package], title: data[:title], description: data[:description]) unless package
+        package.versions.create(
+          value: data[:version],
+          published_at: DateTime.parse(data[:"date/publication"])
+        )
       end
       @status = :success
     else
@@ -34,5 +38,12 @@ class PackageFetcher
     io = Util::Tar.ungzip(result.tar)
     description = Util::Tar.fetch_description_from_tar(io)
     Util.parse_package(description)
+  end
+
+  def find_package_by_name(name)
+    Package
+      .includes(:versions)
+      .where("packages.name = ?", name)
+      .first
   end
 end

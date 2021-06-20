@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_20_103433) do
+ActiveRecord::Schema.define(version: 2021_06_20_114603) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,16 @@ ActiveRecord::Schema.define(version: 2021_06_20_103433) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["name"], name: "index_packages_on_name", unique: true
+  end
+
+  create_table "versions", force: :cascade do |t|
+    t.string "value"
+    t.datetime "published_at"
+    t.bigint "package_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["package_id"], name: "index_versions_on_package_id"
+    t.index ["value", "package_id"], name: "index_versions_on_value_and_package_id", unique: true
   end
 
 end
