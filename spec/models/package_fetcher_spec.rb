@@ -22,15 +22,20 @@ RSpec.describe PackageFetcher do
       expect(fetcher).to be_successful
     end
 
-    it "creates a package and a version" do
+    it "creates package, version, authors" do
       fetcher.run!
+
       package = Package.find_by(name: "A3")
       expect(package).not_to be_nil
       expect(package.title).to eq "Accurate, Adaptable, and Accessible Error Metrics for Predictive Models"
       expect(package.description).to eq "Supplies tools for tabulating and analyzing the results of predictive models. The methods employed are applicable to virtually any predictive model and make comparisons between different methodologies straightforward."
+
       version = package.versions.first
       expect(version.value).to eq "1.0.0"
       expect(version.published_at.to_datetime).to eq "2015-08-16 23:00:00"
+
+      author = package.authors.first
+      expect(author.name).to eq "Scott Fortmann-Roe"
     end
 
     context "package already exist" do

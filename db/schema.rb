@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_20_114603) do
+ActiveRecord::Schema.define(version: 2021_06_20_123112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "authorships", force: :cascade do |t|
+    t.bigint "person_id", null: false
+    t.bigint "package_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["package_id"], name: "index_authorships_on_package_id"
+    t.index ["person_id"], name: "index_authorships_on_person_id"
+  end
 
   create_table "packages", force: :cascade do |t|
     t.string "name"
@@ -22,6 +31,13 @@ ActiveRecord::Schema.define(version: 2021_06_20_114603) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["name"], name: "index_packages_on_name", unique: true
+  end
+
+  create_table "people", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "versions", force: :cascade do |t|
@@ -34,4 +50,6 @@ ActiveRecord::Schema.define(version: 2021_06_20_114603) do
     t.index ["value", "package_id"], name: "index_versions_on_value_and_package_id", unique: true
   end
 
+  add_foreign_key "authorships", "packages"
+  add_foreign_key "authorships", "people"
 end
