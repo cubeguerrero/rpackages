@@ -48,6 +48,7 @@ class PackageFetcher
     end
     process_version(package, data)
     process_authors(package, data)
+    process_maintainers(package, data)
   end
 
   def find_package_by_name(name)
@@ -74,8 +75,20 @@ class PackageFetcher
   def process_authors(package, data)
     authors = data[:author].split(",")
     authors.each do |author_name|
-      author = Person.find_or_create_by(name: author_name)
+      author = Person.find_or_create_by(name: author_name.strip)
       package.authors << author
+    end
+  end
+
+  def process_maintainers(package, data)
+    maintainers = data[:maintainer].split(",")
+    maintainers.each do |maintainer_data|
+      name, email = maintainer_data.split("<")
+      email = email.strip[(0...-1)]
+      maintainer = Person.find_or_create_by(name: name.strip)
+      maintainer.email = email
+      maintainer.save!
+      package.maintainers << maintainer
     end
   end
 end

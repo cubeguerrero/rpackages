@@ -42,7 +42,7 @@ RSpec.describe PackageFetcher do
       expect(maintainer.email).to eq "scottfr@berkeley.edu"
 
       # we use same data for author and maintainer
-      author.reload!
+      author.reload
       expect(author).to eq maintainer
     end
 

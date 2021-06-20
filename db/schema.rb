@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_20_123112) do
+ActiveRecord::Schema.define(version: 2021_06_20_125509) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,15 @@ ActiveRecord::Schema.define(version: 2021_06_20_123112) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["package_id"], name: "index_authorships_on_package_id"
     t.index ["person_id"], name: "index_authorships_on_person_id"
+  end
+
+  create_table "maintainerships", force: :cascade do |t|
+    t.bigint "package_id", null: false
+    t.bigint "person_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["package_id"], name: "index_maintainerships_on_package_id"
+    t.index ["person_id"], name: "index_maintainerships_on_person_id"
   end
 
   create_table "packages", force: :cascade do |t|
@@ -52,4 +61,6 @@ ActiveRecord::Schema.define(version: 2021_06_20_123112) do
 
   add_foreign_key "authorships", "packages"
   add_foreign_key "authorships", "people"
+  add_foreign_key "maintainerships", "packages"
+  add_foreign_key "maintainerships", "people"
 end
