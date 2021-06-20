@@ -6,8 +6,8 @@ module CRAN
     attr_reader :status
 
     def initialize(packages:, status:)
-      @packages = process_packages(packages)
       @status = status
+      @packages = process_packages(packages)
     end
 
     def successful?
@@ -17,6 +17,8 @@ module CRAN
     private
 
     def process_packages(packages)
+      return [] unless successful?
+
       packages.split("\n\n").map do |package|
         result = {}
         last_key = nil
