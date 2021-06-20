@@ -7,4 +7,8 @@ class Package < ApplicationRecord
   has_many :maintainers, through: :maintainerships, source: :person
 
   validates :name, presence: true, uniqueness: true
+
+  def latest_version
+    versions.first
+  end
 end

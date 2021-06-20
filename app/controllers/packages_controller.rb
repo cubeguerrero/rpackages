@@ -1,9 +1,9 @@
 class PackagesController < ApplicationController
   def index
-    # Had no time but this would be better to paginate this
-    @packages = Package.all
+    @packages = Package.includes(:versions).all
   end
 
   def show
+    @package = Package.find(params[:id])
   end
 end
