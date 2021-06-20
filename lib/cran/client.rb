@@ -1,4 +1,5 @@
 require 'faraday'
+require 'open-uri'
 require_relative './result'
 
 module CRAN
@@ -8,6 +9,13 @@ module CRAN
     def packages
       response = get('PACKAGES')
       Result.new(status: response.status, packages: response.body)
+    end
+
+    def fetch_tar(package_name, version)
+      f = URI.open("#{BASE_URL}/#{package_name}_#{version}.tar.gz")
+      Result.new(status: 200, packages: '', tar: f)
+    rescue OpenURI::HTTPError
+      Result.new(status: 404)
     end
 
     private

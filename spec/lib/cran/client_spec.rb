@@ -25,4 +25,26 @@ RSpec.describe CRAN::Client do
       end
     end
   end
+
+  describe "#fetch_tar" do
+    context "successful request" do
+      it "is successful" do
+        VCR.use_cassette "tar_success" do
+          client = CRAN::Client.new
+          result = client.fetch_tar("A3", "1.0.0")
+
+          expect(result).to be_successful
+        end
+      end
+
+      it "is unsuccessful" do
+        VCR.use_cassette "tar_not_found" do
+          client = CRAN::Client.new
+          result = client.fetch_tar("A3", "1.0.1")
+
+          expect(result).not_to be_successful
+        end
+      end
+    end
+  end
 end

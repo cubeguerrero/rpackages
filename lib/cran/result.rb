@@ -2,12 +2,12 @@ require_relative '../util/util'
 
 module CRAN
   class Result
-    attr_reader :packages
-    attr_reader :status
+    attr_reader :status, :packages, :tar
 
-    def initialize(packages:, status:)
+    def initialize(status:, packages: '', tar: nil)
       @status = status
       @packages = process_packages(packages)
+      @tar = tar
     end
 
     def successful?
@@ -17,6 +17,7 @@ module CRAN
     private
 
     def process_packages(packages)
+      return '' if packages == ''
       return [] unless successful?
       packages.split("\n\n").map {|p| Util.parse_package(p) }
     end
