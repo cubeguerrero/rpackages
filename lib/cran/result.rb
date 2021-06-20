@@ -1,4 +1,4 @@
-require 'active_support/inflector'
+require_relative '../util/util'
 
 module CRAN
   class Result
@@ -18,27 +18,7 @@ module CRAN
 
     def process_packages(packages)
       return [] unless successful?
-
-      packages.split("\n\n").map do |package|
-        result = {}
-        last_key = nil
-        package.each_line do |line|
-          detail = line.split(':')
-
-          # if after splitting, the array has > 1 length
-          # means that we have a key, value pair if not use
-          # the last key.
-          if detail.length > 1
-            key, value = detail
-            last_key = key.underscore.to_sym
-            result[last_key] = value.strip
-          else
-            result[last_key] += " #{detail[0].strip}"
-          end
-        end
-
-        result
-      end
+      packages.split("\n\n").map {|p| Util.parse_package(p) }
     end
   end
 end
