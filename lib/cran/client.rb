@@ -1,4 +1,5 @@
 require 'faraday'
+require_relative './result'
 
 module CRAN
   class Client
@@ -6,7 +7,7 @@ module CRAN
 
     def packages
       response = get('PACKAGES')
-      response.body
+      Result.new(status: response.status, packages: response.body)
     end
 
     private

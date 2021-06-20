@@ -28,7 +28,9 @@ group :development, :test do
   gem 'factory_bot_rails', '~> 6.2'
   gem 'faker', '~> 2.18'
   gem 'rspec-rails', '~> 5.0', '>= 5.0.1'
+  gem 'vcr', '~> 6.0'
   gem 'webdrivers', '~> 4.6'
+  gem 'webmock', '~> 3.13'
 end
 
 group :development do

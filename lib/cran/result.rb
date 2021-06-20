@@ -10,6 +10,10 @@ module CRAN
       @status = status
     end
 
+    def successful?
+      @status == 200
+    end
+
     private
 
     def process_packages(packages)
@@ -27,7 +31,7 @@ module CRAN
             last_key = key.underscore.to_sym
             result[last_key] = value.strip
           else
-            result[last_key] += result[last_key] + detail[0].strip
+            result[last_key] += " #{detail[0].strip}"
           end
         end
 
