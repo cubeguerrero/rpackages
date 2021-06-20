@@ -36,16 +36,18 @@ class PackageFetcher
   end
 
   def process_package(data)
-    if package = find_package_by_name(data[:package])
-      version = package.versions.where(value: data[:version]).first
-      return if version
-    else
-      package = Package.create(name: data[:package], title: data[:title], description: data[:description]) unless package
+    return unless need_to_process?(data[:package], data[:version])
+
+    package = find_package_by_name(data[:package])
+    unless package
+      package = Package.create(
+        name: data[:package],
+        title: data[:title],
+        description: data[:description]
+      )
     end
-    package.versions.create(
-      value: data[:version],
-      published_at: DateTime.parse(data[:"date/publication"])
-    )
+    process_version(package, data)
+    process_authors(package, data)
   end
 
   def find_package_by_name(name)
@@ -53,5 +55,27 @@ class PackageFetcher
       .includes(:versions)
       .where("packages.name = ?", name)
       .first
+  end
+
+  def need_to_process?(name, version)
+    Package
+      .joins(:versions)
+      .where("packages.name = ?", name)
+      .where("versions.value = ?", version)
+  end
+
+  def process_version(package, data)
+    package.versions.create(
+      value: data[:version],
+      published_at: DateTime.parse(data[:"date/publication"])
+    )
+  end
+
+  def process_authors(package, data)
+    authors = data[:author].split(",")
+    authors.each do |author_name|
+      author = Person.find_or_create_by(name: author_name)
+      package.authors << author
+    end
   end
 end

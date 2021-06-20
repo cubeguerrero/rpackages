@@ -22,7 +22,7 @@ RSpec.describe PackageFetcher do
       expect(fetcher).to be_successful
     end
 
-    it "creates package, version, authors" do
+    it "creates package, version, authors, and maintainers" do
       fetcher.run!
 
       package = Package.find_by(name: "A3")
@@ -36,6 +36,14 @@ RSpec.describe PackageFetcher do
 
       author = package.authors.first
       expect(author.name).to eq "Scott Fortmann-Roe"
+
+      maintainer = package.maintainers.first
+      expect(maintainer.name).to eq "Scott Fortmann-Roe"
+      expect(maintainer.email).to eq "scottfr@berkeley.edu"
+
+      # we use same data for author and maintainer
+      author.reload!
+      expect(author).to eq maintainer
     end
 
     context "package already exist" do
